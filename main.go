@@ -114,7 +114,7 @@ func main() {
 	r := mux.NewRouter()
 	r.Handle("/", handler(serveHome))
 	r.Handle("/{username}", handler(serveProfile))
-	url := ":5000"
+	url := "0.0.0.0:80"
 	log.Printf("Listening on %s", url)
-	log.Fatal(http.ListenAndServe(":5000", r))
+	log.Fatal(http.ListenAndServe(url, r))
 }
