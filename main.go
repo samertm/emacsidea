@@ -16,11 +16,11 @@ import (
 )
 
 func serveHome(w http.ResponseWriter, r *http.Request) error {
-	io.WriteString(w, `<p>Automagically fetch .emacs files for GitHub users</p>
-<p>Try it by appending "/{your username}" to the url</p> 
-<p>check out the following configs:</p>
-<p><a href="/samertm">samer's config</a></p>
-<p><a href="/markmccaskey">mark's config</a></p>`)
+	io.WriteString(w, `<p>Automagically fetch .emacs files for GitHub users.</p>
+<p>Try it by appending "/{your username}" to the url.</p>
+<p>Check out the following configs:</p>
+<p><a href="/samertm">Samer's config</a></p>
+<p><a href="/markmccaskey">Mark's config</a></p>`)
 	return nil
 }
 
