@@ -16,7 +16,9 @@ import (
 )
 
 func serveHome(w http.ResponseWriter, r *http.Request) error {
-	io.WriteString(w, `<p>check out the following configs:</p>
+	io.WriteString(w, `<p>Automagically fetch .emacs files for GitHub users</p>
+<p>Try it by appending "/{your username}" to the url</p> 
+<p>check out the following configs:</p>
 <p><a href="/samertm">samer's config</a></p>
 <p><a href="/markmccaskey">mark's config</a></p>`)
 	return nil
@@ -46,7 +48,7 @@ func serveProfile(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 	if !found {
-		out += "<p>Could not find emacs config.</p>"
+		out += `<p>Could not find emacs config. Unexpected? <a href="https://github.com/samertm/emacsidea/issues">File an issue</a>.</p>`
 		io.WriteString(w, out)
 		return nil
 	}
