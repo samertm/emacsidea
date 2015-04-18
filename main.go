@@ -24,7 +24,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) error {
 
 func serveProfile(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	io.WriteString(w, "<p>Emacs config for: "+vars["username"]+"</p>")
+	out := "<p>Emacs config for: " + vars["username"] + "</p>"
 	c := github.NewClient(nil)
 	rs, _, err := c.Repositories.List(vars["username"], nil)
 	if err != nil {
@@ -46,16 +46,16 @@ func serveProfile(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 	if !found {
-		io.WriteString(w, "<p>Could not find emacs config.</p>")
+		out += "<p>Could not find emacs config.</p>"
+		io.WriteString(w, out)
 		return nil
 	}
 	code, err := getCode(*emacsConfigRepo.CloneURL)
 	if err != nil {
 		return err
 	}
-	io.WriteString(w, "<pre>")
-	io.WriteString(w, code)
-	io.WriteString(w, "</pre>")
+	out += "<pre>" + code + "</pre>"
+	io.WriteString(w, out)
 	return nil
 }
 
