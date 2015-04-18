@@ -16,13 +16,15 @@ import (
 )
 
 func serveHome(w http.ResponseWriter, r *http.Request) error {
-	io.WriteString(w, "<p>hello emacs</p")
+	io.WriteString(w, `<p>check out the following configs:</p>
+<p><a href="/samertm">samer's config</a></p>
+<p><a href="/markmccaskey">mark's config</a></p>`)
 	return nil
 }
 
 func serveProfile(w http.ResponseWriter, r *http.Request) error {
 	vars := mux.Vars(r)
-	io.WriteString(w, "<p>Your username is: "+vars["username"]+"</p>")
+	io.WriteString(w, "<p>Emacs config for: "+vars["username"]+"</p>")
 	c := github.NewClient(nil)
 	rs, _, err := c.Repositories.List(vars["username"], nil)
 	if err != nil {
@@ -31,14 +33,18 @@ func serveProfile(w http.ResponseWriter, r *http.Request) error {
 	var found bool
 	var emacsConfigRepo github.Repository
 	for _, r := range rs {
-		if *r.Name == ".emacs.d" {
-			emacsConfigRepo = r
-			found = true
+		if *r.Name == ".emacs.d" ||
+			*r.Name == "dotfiles" {
+			// prefer .emacs.d > dotfiles.
+			if emacsConfigRepo.ID == nil || *emacsConfigRepo.Name == "dotfiles" {
+				emacsConfigRepo = r
+				found = true
+			}
 			break
 		}
 	}
 	if !found {
-		io.WriteString(w, "<p>Could not find .emacs.d repo</p>")
+		io.WriteString(w, "<p>Could not find emacs config.</p>")
 		return nil
 	}
 	code, err := getCode(*emacsConfigRepo.CloneURL)
@@ -84,7 +90,11 @@ func getCode(cloneURL string) (string, error) {
 	}
 	f, err := ioutil.ReadFile(filepath.Join(p, "init.el"))
 	if err != nil {
-		return "", err
+		f, err := ioutil.ReadFile(filepath.Join(p, ".emacs"))
+		if err != nil {
+			return "", err
+		}
+		return string(f), nil
 	}
 	return string(f), nil
 }
