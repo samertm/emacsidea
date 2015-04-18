@@ -34,6 +34,7 @@ func serveProfile(w http.ResponseWriter, r *http.Request) error {
 	var emacsConfigRepo github.Repository
 	for _, r := range rs {
 		if *r.Name == ".emacs.d" ||
+			*r.Name == "dotemacsd" ||
 			*r.Name == "dotfiles" {
 			// prefer .emacs.d > dotfiles.
 			if emacsConfigRepo.ID == nil || *emacsConfigRepo.Name == "dotfiles" {
